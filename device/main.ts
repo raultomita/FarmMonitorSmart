@@ -13,13 +13,12 @@
  * limitations under the License.
  */
 
-import {startUdpControl, startUdpDiscovery} from './server';
+import {startUdpDiscovery} from './server';
 
 // main() is in a separate .ts module to make server more testable.
 
 function main() {
   startUdpDiscovery();
-  startUdpControl();
 }
 
 main();
