@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=npm start --prefix /home/pi/smart-home-local/app/ -- --host 0.0.0.0
+ExecStart=/usr/local/bin/npm start --prefix /...
 
 [Install]
 WantedBy=multi-user.target
