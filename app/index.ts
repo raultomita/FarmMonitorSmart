@@ -20,6 +20,7 @@ const homeApp = new HomeApp(smarthomeApp);
 
 smarthomeApp
     .onIdentify(homeApp.identifyHandler)
+    .onReachableDevices(homeApp.reachableDevicesHandler)
     .onExecute(homeApp.executeHandler)
     .listen()
     .then(() => {
