@@ -1,0 +1,10 @@
+[Unit]
+Description=Smart Home Discovery Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=npm start --prefix /home/pi/smart-home-local/device/ -- --udp_discovery_port 3311 --udp_discovery_packet A5A5A5A5
+
+[Install]
+WantedBy=multi-user.target
