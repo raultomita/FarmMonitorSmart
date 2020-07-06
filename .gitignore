@@ -7,3 +7,4 @@ device/**.js.map
 functions/**.js
 functions/**.js.map
 firebase-debug.log
+functions/ClaudApi/appsettings.Development.json
