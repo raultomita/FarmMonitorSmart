@@ -1,6 +1,7 @@
 ﻿using CloudApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -8,30 +9,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CloudApi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ConnectionMultiplexer redisConnection;
+        private readonly Container container;
 
-        public HomeController(ConnectionMultiplexer redisConnection)
+        public HomeController(IOptions<CosmosOptions> cosmosOptions, CosmosClient cosmosClient)
         {
-            this.redisConnection = redisConnection;
+            container = cosmosClient.GetContainer(cosmosOptions.Value.Database, cosmosOptions.Value.ContainerId);
         }
-        
-        public IActionResult Init()
-        {
-            IDatabase db = redisConnection.GetDatabase();
-
-            string devices = $"[{string.Join(", ", db.HashGetAll("devices").Select(v => v.Value))}]";
-            Device[] deserializedDevices = JsonConvert.DeserializeObject<Device[]>(devices);
-            return ReportState(deserializedDevices);
-        }    
 
         public IActionResult Sync()
         {
-        return Ok();
+            var devices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true).ToList();
+            return Ok(devices);
         }
 
         public IActionResult Query()
@@ -40,8 +34,15 @@ namespace CloudApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportState(Device[] devices)
+        public async Task<IActionResult> ReportState(Device[] devices)
         {
+            foreach (var item in devices)
+            {
+                var device = item;
+
+                await container.UpsertItemAsync(device).ConfigureAwait(false);
+            }
+
             return Ok();
         }
     }

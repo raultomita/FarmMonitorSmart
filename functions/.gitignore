@@ -432,4 +432,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-
+/CloudApi/appsettings.Development.json

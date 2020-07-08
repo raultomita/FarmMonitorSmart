@@ -6,6 +6,7 @@ using CloudApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,12 +29,13 @@ namespace CloudApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.Configure<RedisOptions>(Configuration.GetSection(RedisOptions.Redis));
-
+            services.Configure<CosmosOptions>(Configuration.GetSection(CosmosOptions.Cosmos));
+            
             services.AddSingleton(sp => {
-                var options = sp.GetService<IOptions<RedisOptions>>();
-                return ConnectionMultiplexer.Connect(options.Value.Address);
+                var options = sp.GetService<IOptions<CosmosOptions>>().Value;
+                return new CosmosClient(options.EndpointUri, options.PrimaryKey);
             });
+            services.AddApplicationInsightsTelemetry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

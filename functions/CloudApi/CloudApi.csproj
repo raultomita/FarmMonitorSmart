@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>c877e1b6-de68-4e24-8a1e-5b9bcf59a024</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.10.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
   </ItemGroup>
