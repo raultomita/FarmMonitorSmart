@@ -1,0 +1,211 @@
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #E01A76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+
+.notificationHeader {}
+
+    .notificationHeader .heartbeat {
+        margin-right: 4px;
+    }
+
+    .notificationHeader .state {
+        margin-right: 4px;
+    }
+
+.deviceCollection {
+    margin: 0 -7px 0 -7px;
+}
+
+.deviceWrapper {
+    width: 33%;
+    display: inline-block;
+    padding: 0 7px 0 7px;
+}
+
+.filterDevices {
+    padding: 10px 7px 20px 7px;
+    text-align: center;
+}
+
+    .filterDevices button {
+        margin: 0 5px 0 5px;
+        width: 42px;
+        font-size: 16px;
+        height: 42px;
+    }
+
+.deviceTrigger {
+    width: 100%;
+    margin-bottom: 13px;
+    color: black;
+}
+
+.activeDevices {
+    margin-bottom: 15px;
+}
+
+.activeDevice {
+    color: white;
+    margin: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+    .activeDevice .location {
+        margin-right: 6px;
+    }
+
+    .activeDevice .deviceName {
+        margin-right: 3px;
+        font-size: 14px;
+    }
+
+.deviceTrigger.btn-success {
+    color: white;
+}
+
+.deviceTrigger .location {
+    float: left;
+    font-size: 16px;
+    color: lightgray;
+}
+
+.deviceTrigger .deviceName {
+    float: right;
+    font-style: italic;
+    font-weight: bold;
+    color: lightgray;
+    margin-left: 23px;
+    position: absolute;
+}
+
+.deviceTrigger .content {
+    margin-top: 25px;
+}
+
+.deviceTrigger .timeStamp {
+    float: right;
+    margin-top: 9px;
+    color: darkgray;
+    font-size: smaller;
+}
+
+.activeDevice.Bedroom {
+    background-color: yellowgreen;
+}
+
+.activeDevice.Lobby {
+    background-color: orange;
+}
+
+.activeDevice.Bathroom {
+    background-color: dodgerblue;
+}
+
+.activeDevice.Living-room {
+    background-color: darkkhaki;
+}
+
+.activeDevice.Kitchen {
+    background-color: indianred;
+}
+
+.deviceType {
+    color: white;
+    background-color: limegreen;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.locationType {
+    color: white;
+    background-color: cornflowerblue;
+    margin: 3px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.deviceTrigger.Bedroom .location, .filterDevices button.Bedroom {
+    color: yellowgreen;
+}
+
+.deviceTrigger.Lobby .location, .filterDevices button.Lobby {
+    color: orange;
+}
+
+.deviceTrigger.Bathroom .location, .filterDevices button.Bathroom {
+    color: dodgerblue;
+}
+
+.deviceTrigger.Living-room .location, .filterDevices button.Living-room {
+    color: darkkhaki;
+}
+
+.deviceTrigger.Kitchen .location, .filterDevices button.Kitchen {
+    color: indianred;
+}
+
+.deviceTrigger.Garden .location, .filterDevices button.Garden {
+    color: green;
+}
+
+.deviceTrigger.btn-success .location {
+    color: white;
+}
+
+.deviceTrigger.btn-default .timeStamp {
+    color: darkgray;
+}
+
+.deviceTrigger.btn-success .timeStamp {
+    color: #e4e4e4;
+}
+
+
+.systemOverview > h1 {
+    font-style: italic;
+    border-bottom: solid lightgray 1px;
+    margin-bottom: 10px;
+}
+
+.fieldDetail label {
+    width: 40%;
+}
+
+
+.instancesDetails > h2 {
+    font-size: 22px;
+    color: blue;
+}
+
+.messagesHeader span {
+    display: block;
+}
+
+.unmapped > h2 {
+    font-size: 22px;
+    color: orange;
+}
+
+.deviceDetails {
+    margin-bottom: 10px;
+}
+
+    .deviceDetails label {
+        margin-bottom: 0;
+    }
