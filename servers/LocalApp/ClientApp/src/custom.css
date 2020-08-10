@@ -1,20 +1,34 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 code {
-  color: #E01A76;
+    color: #E01A76;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 
-.notificationHeader {}
+.notificationHeader {
+    text-align: center;
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    right: 0px;
+    z-index:-1;
+    white-space: nowrap;
+}
+
+    
+
+    .notificationHeader .fa-power-off {
+        padding: 7px;
+    }
 
     .notificationHeader .heartbeat {
         margin-right: 4px;
@@ -67,11 +81,13 @@ code {
 
     .activeDevice .location {
         margin-right: 6px;
+        display: inline-block;
     }
 
     .activeDevice .deviceName {
         margin-right: 3px;
         font-size: 14px;
+        display: inline-block;
     }
 
 .deviceTrigger.btn-success {

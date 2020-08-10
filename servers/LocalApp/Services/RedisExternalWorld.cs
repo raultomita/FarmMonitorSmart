@@ -64,7 +64,7 @@ namespace LocalApp.Services
         private void RedisHandler(RedisChannel channel, RedisValue value)
         {
             logger.LogInformation($"Just received {value} from {channel}");
-            hubContext.Clients.All.SendAsync(channel, value);
+            hubContext.Clients.All.SendAsync(channel, value.ToString());
         }
 
         public HashEntry[] GetAllDevices()

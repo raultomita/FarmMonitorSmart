@@ -22,7 +22,7 @@ namespace LocalApp.Controllers
             
         }
                 
-        [HttpPut("{id}")]
+        [HttpPut()]
         public void Put(string id)
         {
             externalWorld.SendCommand(id);

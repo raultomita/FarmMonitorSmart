@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FilterButton } from './FilterButton';
-import { Device } from './Device';
+import { DeviceButton } from './DeviceButton';
+import { Notifications } from './Notifications'
 
 export class Home extends Component {
     static displayName = Home.name;
@@ -14,8 +15,8 @@ export class Home extends Component {
     }
 
     updateDevice(device) {
-        let currentDevices = this.state.devices.map(d => d.id == device.id ? device : d);
-        let currentFilteredDevices = this.state.filteredDevices.map(d => d.id == device.id ? device : d);
+        let currentDevices = this.state.devices.map(d => d.id === device.id ? device : d);
+        let currentFilteredDevices = this.state.filteredDevices.map(d => d.id === device.id ? device : d);
         this.setState({ devices: currentDevices, filteredDevices: currentFilteredDevices, activeDevices: currentFilteredDevices.filter(d => d.state === "1"), });
     }
 
@@ -36,26 +37,27 @@ export class Home extends Component {
         return this.state.loading
             ? <p><em>Loading...</em></p>
             : <div className="deviceCollection">
+                <Notifications onDeviceReceived={this.updateDevice} />
                 <div className="filterDevices">
                     <FilterButton type="All" onClick={this.resetFilter} symbol="fa-th-large" state={this.state.activeFilter} />
                     <FilterButton type="Bedroom" onClick={this.filter} symbol="fa-bed" state={this.state.activeFilter} />
                     <FilterButton type="Bathroom" onClick={this.filter} symbol="fa-bath" state={this.state.activeFilter} />
-                    <FilterButton type="Kitchen" onClick={this.filter} symbol="fa-cutlery" state={this.state.activeFilter} />
-                    <FilterButton type="Living-room" onClick={this.filter} symbol="fa-television" state={this.state.activeFilter} />
+                    <FilterButton type="Kitchen" onClick={this.filter} symbol="fa-utensils" state={this.state.activeFilter} />
+                    <FilterButton type="Living-room" onClick={this.filter} symbol="fa-tv" state={this.state.activeFilter} />
                     <FilterButton type="Lobby" onClick={this.filter} symbol="fa-archive" state={this.state.activeFilter} />
                 </div>
 
                 {this.state.activeDevices.length > 0 ?
                     <div className="activeDevices">
                         {this.state.activeDevices.map(device =>
-                            <Device {...device} isActive={true} />
+                            <DeviceButton key={device.id} {...device} isActive={true} />
                         )}
                     </div> :
                     ""}
 
                 {this.state.filteredDevices.map(device =>
                     <div key={device.id} className="deviceWrapper">
-                        <Device {...device} />
+                        <DeviceButton {...device} />
                     </div>
                 )}
             </div>;    }

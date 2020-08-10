@@ -15,7 +15,7 @@ export class FilterButton extends Component {
     render() {
         let buttonClassName = "btn btn-outline-dark " + this.props.type;
 
-        if (this.props.state == this.props.type) {
+        if (this.props.state === this.props.type) {
             buttonClassName += " active";
         }
 

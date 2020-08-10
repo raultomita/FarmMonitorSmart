@@ -21,17 +21,18 @@ export class Notifications extends Component {
 
     render() {
         const content = this.state.isConnected ?
-            <span className="badge badge-success">Connected</span> :
-            <span className="badge badge-danger">Disconnected</span>;
+            <span className="badge-success fa fa-power-off"></span> :
+            <span className="badge-danger fa fa-power-off"></span>;
 
         const states = this.state.stations.map((state) => !state.isDead ?
-            <span className="badge badge-success heartbeat">{state.name}</span> :
-            <span className="badge badge-danger heartbeat">{state.name}</span>)
+            <span key={state.name+"ok"} className="badge badge-success heartbeat" title={state.latestDate}>{state.name}</span> :
+            <span key={state.name+"fail"} className="badge badge-danger heartbeat" title={state.latestDate}>{state.name}</span>)
 
         return <div className="notificationHeader">
-            {content}
+            {states}            
             <span className="state">{this.state.status}</span>
-            {states}</div>
+            {content}
+        </div>
     }
 
     connect() {
@@ -40,7 +41,7 @@ export class Notifications extends Component {
 
         hubConnection.on("notifications", (value) => {
             let deviceData = JSON.parse(value);
-            //notificationsWidget.props.onDeviceReceived(deviceData);
+            this.props.onDeviceReceived(deviceData);
         });
 
         hubConnection.on("heartbeats", (value) => {
