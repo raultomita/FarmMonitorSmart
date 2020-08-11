@@ -34,7 +34,7 @@ namespace CloudApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ReportState(Device[] devices)
+        public async Task<IActionResult> ReportState([FromBody] Device[] devices)
         {
             foreach (var item in devices)
             {
