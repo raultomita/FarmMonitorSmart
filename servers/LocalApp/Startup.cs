@@ -22,7 +22,7 @@ namespace LocalApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
-            services.AddSingleton<IExternalWorld, StubExternalWorld>();
+            services.AddSingleton<IExternalWorld, RedisExternalWorld>();
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
