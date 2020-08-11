@@ -18,8 +18,7 @@ namespace LocalApp.Controllers
         public IActionResult Get()
         {
             var devices = externalWorld.GetAllDevices(); 
-            return Content($"[{string.Join(", ", devices.Select(entry => entry.Value))}]", "application/json");
-            
+            return Content($"[{string.Join(", ", devices.Select(entry => entry.Value))}]", "application/json");            
         }
                 
         [HttpPut()]

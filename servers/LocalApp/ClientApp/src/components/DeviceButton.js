@@ -24,7 +24,6 @@ export class DeviceButton extends Component {
         return { isBusy: false };
     }
 
-
     render() {
         let actionIcon = this.state.isBusy ? <i className="fas fa-sync fa-spin fa-lg"></i> : <i className="fa fa-power-off fa-lg"></i>;
         let className = " "
@@ -63,7 +62,5 @@ export class DeviceButton extends Component {
                 <div className="deviceName">{this.props.display}</div>    
         </div>;  
         }
-
-
     }
 }
