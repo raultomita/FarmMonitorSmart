@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 using System.Linq;
+using Common;
+using System.Collections.Concurrent;
 
 namespace LocalApp.Services
 {
     public class StubExternalWorld : IExternalWorld
     {
+        public ConcurrentDictionary<string, Device> ReceivedDevices { get; } = new ConcurrentDictionary<string, Device>();
+
         public void DeleteKey(string key)
         {
             throw new NotImplementedException();
@@ -46,6 +50,11 @@ namespace LocalApp.Services
         public RedisType GetType(string key)
         {
             throw new NotImplementedException();
+        }
+
+        public void Subscribe(Action<Device> callback)
+        {
+            
         }
 
         public void SendCommand(string id)

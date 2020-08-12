@@ -36,7 +36,7 @@ export class Notifications extends Component {
 
         hubConnection.on("heartbeats", (value) => {
             console.log(value);
-            this.setState({ stations: value });
+            this.setState({ stations: value.deviceStates, pendingDevices: value.pendingDevices });
         })
 
         hubConnection.onclose(err => this.setState({ isConnected: false, status: "Closed" }));
@@ -79,6 +79,7 @@ export class Notifications extends Component {
         })
 
         return <div className="notificationHeader">
+            <span key="pending" className="badge badge-primary heartbeat" title={this.state.pendingDevices}>{this.state.pendingDevices}</span>            
             {states}
             <span className="state">{this.state.status}</span>
             <span className={connClass} onClick={this.turnAllOff}></span>

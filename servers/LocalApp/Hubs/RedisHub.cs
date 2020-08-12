@@ -17,11 +17,19 @@ namespace LocalApp.Hubs
         }
         public override async Task OnConnectedAsync()
         {
-            await Clients.Caller.SendAsync("heartbeats", externalWorld.GetHashFields("heartbeat").Select(h=> new {
-                name = char.ToUpper(h.fieldName.First()),
+            var deviceStates = externalWorld.GetHashFields("heartbeat").Select(h => new
+            {
+                name = h.fieldName.Substring(0, 1).ToUpper(),
                 latestDate = h.value,
-                isDead = (DateTime.Now - DateTime.ParseExact(h.value, "dd.MM.yy HH:mm:ss", CultureInfo.InvariantCulture)).Minutes > 10 })
-                .ToList());            
+                isDead = (DateTime.Now - DateTime.ParseExact(h.value, "dd.MM.yy HH:mm:ss", CultureInfo.InvariantCulture)).Minutes > 10
+            }).ToList();
+
+
+            await Clients.Caller.SendAsync("heartbeats", new
+            {
+                deviceStates,
+                pendingDevices = externalWorld.ReceivedDevices.Count
+            });
             await base.OnConnectedAsync();
         }
     }

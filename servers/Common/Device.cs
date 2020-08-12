@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Diagnostics;
+﻿using System;
 
-namespace CloudApi.Models
+namespace Common
 {
     public class Device
-    {
-        [JsonProperty(PropertyName = "id")]
+    {       
         public string Id { get; set; }
         public string Type { get; set; }
         public string Display { get; set; }

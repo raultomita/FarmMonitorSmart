@@ -26,7 +26,7 @@ namespace LocalApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
-            services.AddSingleton<IExternalWorld, StubExternalWorld>();
+            services.AddSingleton<IExternalWorld, RedisExternalWorld>();
             services.AddControllersWithViews();
 
             services.Configure<CloudApiOptions>(Configuration.GetSection("CloudApi"));
@@ -36,12 +36,8 @@ namespace LocalApp
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services
-                .AddMicrosoftWebAppAuthentication(Configuration)
-                .AddMicrosoftWebAppCallsWebApi(Configuration, new string[] { Configuration["CloudApi:Scope"] })
-                .AddInMemoryTokenCaches();
-
-            services.AddHttpClient<CloudClient>();
+            services.AddSingleton<CloudClient>();
+            services.AddHostedService<CloudReporter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

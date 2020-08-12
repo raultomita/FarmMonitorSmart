@@ -1,14 +1,14 @@
-﻿using StackExchange.Redis;
+﻿using Common;
+using StackExchange.Redis;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LocalApp.Services
 {
     public interface IExternalWorld
     {
-        Task SubscribeAsync(Action<RedisChannel, RedisValue> subscriptionHandler);
-        Task UnsubscribeAsync(Action<RedisChannel, RedisValue> subscriptionHandler);
+        ConcurrentDictionary<string,Device> ReceivedDevices { get; }
         HashEntry[] GetAllDevices();
         void SendCommand(string id);
         List<string> GetAllKeys();

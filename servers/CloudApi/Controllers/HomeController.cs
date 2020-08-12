@@ -1,4 +1,5 @@
 ﻿using CloudApi.Models;
+using Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Azure.Cosmos;

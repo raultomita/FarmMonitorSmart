@@ -1,50 +1,55 @@
-﻿using LocalApp.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Common;
+using IdentityModel.Client;
+using LocalApp.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
-namespace LocalApp.Controllers
+namespace LocalApp.Services
 {
     public class CloudClient
     {
-        private readonly ITokenAcquisition tokenAcquisition;
         private readonly HttpClient httpClient;
         private readonly CloudApiOptions cloudApiOptions;
+        private readonly ILogger<CloudClient> logger;
+        private DateTime? tokenExpiration;
 
-        public CloudClient(
-            ITokenAcquisition tokenAcquisition, 
-            HttpClient httpClient,
-            IOptions<CloudApiOptions> cloudApiOptions)
-        {
-            this.tokenAcquisition = tokenAcquisition;
-            this.httpClient = httpClient;
+        public CloudClient(IOptions<CloudApiOptions> cloudApiOptions, ILogger<CloudClient> logger)
+        {  
+            this.httpClient = new HttpClient();
             this.cloudApiOptions = cloudApiOptions.Value;
+            this.logger = logger;
         }
 
-        public async Task Report()
-        {
-            await PrepareAuthenticatedClient();
-
-            var jsonRequest = JsonConvert.SerializeObject(new object[] { new { id ="switch1"} });
-            var jsoncontent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-            await httpClient.PostAsync(cloudApiOptions.ReportStateUrl, jsoncontent);
+        public void Report(Device[] devices)
+        {   
+            PrepareAuthenticatedClient();
+            var jsoncontent = new StringContent(JsonConvert.SerializeObject(devices), Encoding.UTF8, "application/json");
+            var response = httpClient.PostAsync(cloudApiOptions.ReportStateUrl, jsoncontent).Result;
+            logger.LogInformation(response.Content.ReadAsStringAsync().Result);
         }
 
-        private async Task PrepareAuthenticatedClient()
+        private void PrepareAuthenticatedClient()
         {
-            var accessToken = await tokenAcquisition.GetAccessTokenForAppAsync(new[] { cloudApiOptions.Scope });
-            Debug.WriteLine($"access token-{accessToken}");
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            if(tokenExpiration == null || tokenExpiration < DateTime.Now.AddSeconds(-30))
+            {
+                var tokenResponse = httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+                {
+                    Address = cloudApiOptions.TokenEndpoint,
+                    ClientId = cloudApiOptions.ClientId,
+                    ClientSecret = cloudApiOptions.ClientSecret,
+                    Parameters = new Dictionary<string, string> { { "scope", cloudApiOptions.Scope } }
+                }).Result;
+                tokenExpiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn);
+                httpClient.SetBearerToken(tokenResponse.AccessToken);
+            }
+            
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
     }

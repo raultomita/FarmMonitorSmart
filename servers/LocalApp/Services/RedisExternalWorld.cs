@@ -7,6 +7,9 @@ using LocalApp.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Common;
+using Newtonsoft.Json;
+using System.Collections.Concurrent;
 
 namespace LocalApp.Services
 {
@@ -21,10 +24,13 @@ namespace LocalApp.Services
         private readonly IDatabase database;
         private readonly ISubscriber subscriber;
         private readonly IHubContext<RedisHub> hubContext;
-        private readonly ILogger<RedisExternalWorld> logger;
+        private readonly ILogger logger;
+
+        public ConcurrentDictionary<string, Device> ReceivedDevices { get; }
 
         public RedisExternalWorld(IHubContext<RedisHub> hubContext, IConfiguration configuration, ILogger<RedisExternalWorld> logger)
         {
+            ReceivedDevices = new ConcurrentDictionary<string, Device>();
             this.hubContext = hubContext;
             this.logger = logger;
             ConfigurationOptions options = new ConfigurationOptions();
@@ -32,8 +38,8 @@ namespace LocalApp.Services
             connection = ConnectionMultiplexer.Connect(configuration["redisHost"]);
             database = connection.GetDatabase();
             subscriber = connection.GetSubscriber();
-            subscriber.Subscribe(NotificationsChannel, RedisHandler);
-            subscriber.Subscribe(heartbeatsChannel, RedisHandler);
+            subscriber.Subscribe(NotificationsChannel, OnDeviceReceived);
+            subscriber.Subscribe(heartbeatsChannel, OnHeartbeatReceived);
             logger.LogInformation("Connected to redis");
             connection.ConnectionFailed += Connection_ConnectionFailed;
             connection.ConnectionRestored += Connection_ConnectionRestored;
@@ -61,7 +67,16 @@ namespace LocalApp.Services
             logger.LogWarning($"Connection Failed {e.FailureType} with exception {e.Exception?.Message}");
         }
 
-        private void RedisHandler(RedisChannel channel, RedisValue value)
+        private void OnDeviceReceived(RedisChannel channel, RedisValue value)
+        {
+            logger.LogInformation($"Just received {value} from {channel}");
+            var device = value.ToString();           
+            hubContext.Clients.All.SendAsync(channel, device);
+            var deviceObject = JsonConvert.DeserializeObject<Device>(device);
+            ReceivedDevices.AddOrUpdate(deviceObject.Id, deviceObject,(k, v) => deviceObject);
+        }
+
+        private void OnHeartbeatReceived(RedisChannel channel, RedisValue value)
         {
             logger.LogInformation($"Just received {value} from {channel}");
             hubContext.Clients.All.SendAsync(channel, value.ToString());
