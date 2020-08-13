@@ -22,7 +22,7 @@ namespace CloudApi.Models
                 {
                     Name = d.Display
                 },
-                RoomHint = d.Location,
+                RoomHint = d.Location == "Living-room"? "Living Room" : d.Location,
                 WillResponseState = true
             };
         }

@@ -1,15 +1,10 @@
 ﻿using CloudApi.Models;
 using Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using StackExchange.Redis;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudApi.Controllers
@@ -27,6 +22,7 @@ namespace CloudApi.Controllers
         public IActionResult Sync([FromBody] SyncRequest request)
         {
             var devices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
+                .ToList()
                 .Select(d => GoogleDevice.From(d))
                 .ToList();
 
@@ -41,7 +37,7 @@ namespace CloudApi.Controllers
             };
 
 
-            return Ok(devices);
+            return Ok(response);
         }
 
         [HttpPost]
