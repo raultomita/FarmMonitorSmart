@@ -18,8 +18,6 @@
 import cbor from 'cbor';
 import chalk from 'chalk';
 import dgram from 'dgram';
-import express from 'express';
-import net from 'net';
 import {Readable} from 'stream';
 import yargs from 'yargs';
 
@@ -35,29 +33,18 @@ const argv =
           type: 'number',
           default: 3311,
         })
+        .option('udp_control_port', {
+          describe: 'port to listen on for UDP commands',
+          type: 'number',
+          default: 3312,
+        })
         .option('udp_discovery_packet', {
           describe:
               'hex encoded packet content to match for UDP discovery query',
           type: 'string',
           default: 'A5A5A5A5',
-        })
-        .option('device_id', {
-          describe: 'device id to return in the discovery response',
-          type: 'string',
-          demandOption: true,
-        })       
+        })     
         .argv;
-
-function makeDiscoveryData() {
-  const discoveryData = {
-    id: argv.device_id,
-    model: argv.device_model,
-    hw_rev: argv.hardware_revision,
-    fw_rev: argv.firmware_revision,
-    channels: argv.channel,
-  };
-  return discoveryData;
-}
 
 export function startUdpDiscovery() {
   const discoveryPacket = Buffer.from(argv.udp_discovery_packet, 'hex');
@@ -107,9 +94,9 @@ export function startUdpControl() {
     readable.pipe(opcParser()).on('data', handleOpcMessage);
   });
   server.on('listening', () => {
-    console.log(`UDP control listening on port ${argv.opc_port}`);
+    console.log(`UDP control listening on port ${argv.udp_control_port}`);
   });
-  server.bind(argv.opc_port);
+  server.bind(argv.udp_control_port);
 }
 
 function handleOpcMessage(message: IOPCMessage) {
