@@ -23,15 +23,51 @@ namespace CloudApi.Controllers
             container = cosmosClient.GetContainer(cosmosOptions.Value.Database, cosmosOptions.Value.ContainerId);
         }
 
-        public IActionResult Sync()
+        [HttpPost]
+        public IActionResult Sync([FromBody] SyncRequest request)
         {
-            var devices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true).ToList();
+            var devices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
+                .Select(d => GoogleDevice.From(d))
+                .ToList();
+
+            var response = new SyncResponse
+            {
+                RequestId = request.RequestId,
+                Payload = new SyncResponsePayload
+                {
+                    AgentUserId = request.AgentUserId,
+                    Devices = devices
+                }
+            };
+
+
             return Ok(devices);
         }
 
-        public IActionResult Query()
+        [HttpPost]
+        public IActionResult Query([FromBody] QueryRequest request)
         {
-            return Ok();
+            var requestedDevices = request?.Inputs?.SelectMany(i => i.Payload?.Devices?.Select(d => d.Id))
+                .ToList();
+
+            var foundDevices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
+                .Where(d => requestedDevices.Contains(d.Id))
+                .ToDictionary(d => d.Id, d => (object) new
+                {
+                    On = d.State == "1" ? true : false,
+                    Online = true
+                });
+
+            var response = new QueryResponse
+            {
+                RequestId = request.RequestId,
+                Payload = new QueryResponsePayload
+                {
+                    Devices = foundDevices
+                }
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]

@@ -56,10 +56,8 @@ namespace LocalApp.Services
             finally
             {
                 timer?.Change(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
-
             }
         }
-
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
