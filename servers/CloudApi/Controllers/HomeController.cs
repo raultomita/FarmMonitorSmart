@@ -46,9 +46,9 @@ namespace CloudApi.Controllers
             var requestedDevices = request?.Inputs?.SelectMany(i => i.Payload?.Devices?.Select(d => d.Id))
                 .ToList();
 
-            var foundDevices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
-                .Where(d => requestedDevices.Contains(d.Id))
-                .ToDictionary(d => d.Id, d => (object) new
+            var foundDevices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)               
+                .Where(d => requestedDevices.Contains(d.id))
+                .ToDictionary(d => d.id, d => (object) new
                 {
                     On = d.State == "1" ? true : false,
                     Online = true

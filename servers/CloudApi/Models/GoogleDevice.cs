@@ -15,7 +15,7 @@ namespace CloudApi.Models
         {
             return new GoogleDevice
             {
-                Id = d.Id,
+                Id = d.id,
                 Type = "action.devices.types.LIGHT",
                 Traits = new string[] { "action.devices.traits.OnOff" },
                 Name = new GoogleDeviceName

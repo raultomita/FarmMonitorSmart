@@ -73,7 +73,7 @@ namespace LocalApp.Services
             var device = value.ToString();           
             hubContext.Clients.All.SendAsync(channel, device);
             var deviceObject = JsonConvert.DeserializeObject<Device>(device);
-            ReceivedDevices.AddOrUpdate(deviceObject.Id, deviceObject,(k, v) => deviceObject);
+            ReceivedDevices.AddOrUpdate(deviceObject.id, deviceObject,(k, v) => deviceObject);
         }
 
         private void OnHeartbeatReceived(RedisChannel channel, RedisValue value)
