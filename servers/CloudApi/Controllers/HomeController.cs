@@ -36,7 +36,6 @@ namespace CloudApi.Controllers
                 }
             };
 
-
             return Ok(response);
         }
 

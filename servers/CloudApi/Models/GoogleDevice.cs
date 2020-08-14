@@ -10,6 +10,7 @@ namespace CloudApi.Models
         public GoogleDeviceName Name { get; set; }
         public bool WillResponseState { get; set; }
         public string RoomHint { get; set; }
+        public object[] OtherDeviceIds { get; set; }
 
         internal static GoogleDevice From(Device d)
         {
@@ -22,8 +23,14 @@ namespace CloudApi.Models
                 {
                     Name = d.Display
                 },
-                RoomHint = d.Location == "Living-room"? "Living Room" : d.Location,
-                WillResponseState = true
+                RoomHint = d.Location == "Living-room" ? "Living Room" : d.Location,
+                WillResponseState = true,
+                OtherDeviceIds = new object[] {
+                    new 
+                    { 
+                        DeviceId = d.id
+                    }
+                }
             };
         }
     }
