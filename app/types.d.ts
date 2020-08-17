@@ -11,29 +11,8 @@
  * limitations under the License.
  */
 
-import {ControlKind} from '../common/discovery';
-
-export interface IColorAbsolute {
-  color: {name: string; spectrumRGB: number;};
-}
 
 export interface IDiscoveryData {
   id: string;
-  model: string;
-  hw_rev?: string;
-  fw_rev?: string;
-  channels: Array<number>;
-}
-
-export interface ICustomData {
-  channel: number;
-  leds: number;
   port: number;
-  proxy: string;
-  control_protocol: ControlKind;
-}
-
-export interface IStrandInfo {
-  channel: number;
-  leds: number;
 }

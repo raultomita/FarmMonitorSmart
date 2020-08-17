@@ -12,7 +12,6 @@
   "files" : [
       "index.ts",
       "app.ts",
-      "types.d.ts",
-      "../common/discovery.ts"
+      "types.d.ts"
   ]
 }
