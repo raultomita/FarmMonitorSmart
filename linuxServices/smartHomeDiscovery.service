@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=npm start --prefix /home/pi/smart-home-local/device/ -- --udp_discovery_port 3311 --udp_discovery_packet A5A5A5A5
+ExecStart=npm start --prefix path -- --udp_discovery_port port --udp_discovery_packet [pack] --device_id someId
 
 [Install]
 WantedBy=multi-user.target
