@@ -15,10 +15,10 @@ namespace CloudApi.Models
 
         internal static GoogleDevice From(Device d)
         {
-            return new GoogleDevice
+            var device = new GoogleDevice
             {
-                Id = d.id,
-                Type = "action.devices.types.LIGHT",
+                Id = d.id,                
+                Type = d.GoogleType,
                 Traits = new string[] { "action.devices.traits.OnOff" },
                 Name = new GoogleDeviceName
                 {
@@ -37,6 +37,13 @@ namespace CloudApi.Models
                     Port = 7888
                 }
             };
+
+            if (string.IsNullOrEmpty(device.Type))
+            {
+                device.Type = "action.devices.types.LIGHT";
+            }
+
+            return device;
         }
     }
 }

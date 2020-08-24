@@ -1,6 +1,6 @@
 ﻿namespace CloudApi.Models
 {
-    public class QueryRequestPayload
+    public class DevicesRequestPayload
     {
         public DeviceBase[] Devices { get; set; }
     }

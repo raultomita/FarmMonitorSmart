@@ -70,7 +70,7 @@ namespace CloudApi
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Query}");
+                    pattern: "{controller=Home}/{action=Default}");
             });
         }
     }

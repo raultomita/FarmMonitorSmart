@@ -10,5 +10,6 @@ namespace Common
         public string Location { get; set; }
         public DateTime TimeStamp { get; set; }
         public string State { get; set; }
+        public string GoogleType { get; set; }
     }
 }

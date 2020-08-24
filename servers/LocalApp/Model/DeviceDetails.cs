@@ -17,7 +17,7 @@ namespace LocalApp.Model
         public List<string> MappedWith { get; }
         
         public string DeviceId { get; }
-        public (string fieldName, string value)[] Fields { get; set; }
+        public KeyValuePair<string, string>[] Fields { get; set; }
         public List<string> Messages { get; }
     }
 }

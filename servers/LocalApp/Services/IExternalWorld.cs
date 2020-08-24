@@ -14,6 +14,7 @@ namespace LocalApp.Services
         List<string> GetAllKeys();
         RedisType GetType(string key);
         List<string> GetInstanceDeviceIds(string key);
-        (string fieldName, string value)[] GetHashFields(string key);
+        KeyValuePair<string, string>[] GetHashFields(string key);
+        void SaveAttribute(string key, string field, string value);
     }
 }
