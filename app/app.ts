@@ -115,7 +115,7 @@ export class HomeApp {
             try {
               const result = await this.app.getDeviceManager().send(deviceCommand);
               const state = {
-                online: true,
+                online: true
               };
               executeResponse.setSuccessState(result.deviceId, state);
             } catch (e) {

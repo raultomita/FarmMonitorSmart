@@ -41,6 +41,11 @@ const argv =
       type: 'string',
       demandOption: true,
     })
+    .option('key_path', {
+      describe: 'Key to report state API',
+      type: 'string',
+      demandOption: true,
+    })    
     .option('udp_discovery_packet', {
       describe:
         'hex encoded packet content to match for UDP discovery query',
@@ -50,7 +55,9 @@ const argv =
     .argv;
 
 const { promisify } = require("util");
+const { smarthome } = require('actions-on-google');
 const redis = require("redis");
+
 const client = redis.createClient(6379, argv.redis_host);
 
 client.on("error", function (error: any) {
@@ -58,12 +65,70 @@ client.on("error", function (error: any) {
 });
 
 client.on("ready", function () {
-  console.log("Redis ready");
+  console.log("Main Redis ready!");
 });
 
 client.on("reconnecting", function () {
-  console.log("Redis reconnecting ...");
+  console.log("Main Redis reconnecting ...");
 });
+
+const subscriber = redis.createClient(6379, argv.redis_host);
+
+subscriber.on("subscribe", function(channel: string, count: number) {
+  console.log(`Subscribed to redis channel ${channel} [${count}]`);
+});
+
+subscriber.on("message", function(channel: string, message: string) {
+  const device = JSON.parse(message);
+  const state = {
+    [device.id]: {
+      on: device.state == '1'? true: false,
+      activityState: "ACTIVE",
+      playbackState: "PAUSED",
+      currentVolume: 5,
+      isMuted: false
+    }
+  };
+
+  app.reportState({
+    requestId: '123ABC',
+    agentUserId: 'c4422f11-251d-4b1e-9193-ac553fad3e71',
+    payload: {
+      devices: {
+        states: state
+      }
+    }
+  })
+  .then((res: any) => {
+    console.log("Report state was successful");
+  })
+  .catch((res: any) => {
+    console.log("Report state failed");
+    console.log(res);
+  });
+
+  console.log(state);
+});
+
+subscriber.subscribe("notifications");
+
+subscriber.on("error", function (error: any) {
+  console.error(error);
+});
+
+subscriber.on("ready", function () {
+  console.log("Subscriber Redis ready");
+});
+
+subscriber.on("reconnecting", function () {
+  console.log("Subscriber Redis reconnecting ...");
+});
+
+const app = smarthome({
+  jwt: require(argv.key_path)
+});
+
+console.log(argv.key_path);
 
 function makeDiscoveryData() {
   const discoveryData = {
