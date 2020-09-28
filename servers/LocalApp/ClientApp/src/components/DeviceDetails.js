@@ -10,9 +10,9 @@ export class DeviceDetails extends Component {
                 <h5>{this.props.deviceId}</h5>
                 <Messages header="Errors" messages={this.props.messages} />
                 {this.props.fields.map(field =>
-                    <div className="fieldDetail">
-                        <label >{field.item1}</label>
-                        <span >{field.item2}</span>
+                    <div key={field.Key} className="fieldDetail">
+                        <label >{field.Key}</label>
+                        <span >{field.Value}</span>
                     </div>
                 )}
             </div>

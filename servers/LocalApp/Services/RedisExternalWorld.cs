@@ -96,9 +96,9 @@ namespace LocalApp.Services
             return keys.Where(key => key != StatusHashKey).Select(key => (string)key).ToList();
         }
 
-        public (string fieldName, string value)[] GetHashFields(string key)
+        public KeyValuePair<string, string>[] GetHashFields(string key)
         {
-            return database.HashGetAll(key).Select(hf => ((string)hf.Name, (string)hf.Value)).ToArray();
+            return database.HashGetAll(key).Select(hf => new KeyValuePair<string, string>((string)hf.Name, hf.Value.ToString())).ToArray();
         }
 
         public List<string> GetInstanceDeviceIds(string key)
@@ -124,6 +124,11 @@ namespace LocalApp.Services
         public async Task UnsubscribeAsync(Action<RedisChannel, RedisValue> subscriptionHandler)
         {
             await connection.GetSubscriber().UnsubscribeAsync(NotificationsChannel, subscriptionHandler);
+        }
+
+        public void SaveAttribute(string key, string field, string value)
+        {
+            database.HashSet(key, field, value);
         }
     }
 }

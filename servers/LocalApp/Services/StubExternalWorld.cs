@@ -37,9 +37,9 @@ namespace LocalApp.Services
             return new List<string>();
         }
 
-        public (string fieldName, string value)[] GetHashFields(string key)
+        public KeyValuePair<string, string>[] GetHashFields(string key)
         {
-            return new[] { ("watcher", "20.04.87 14:50:50") };
+            return new[] { new KeyValuePair<string,string>("watcher", "20.04.87 14:50:50") };
         }
 
         public List<string> GetInstanceDeviceIds(string key)
@@ -75,6 +75,11 @@ namespace LocalApp.Services
         private string CreateJson(string id, string location, string state)
         {
             return $"{{ \"id\": \"{id}\", \"type\": \"switch\", \"display\":\"{location}{new Random(2).Next(20)}\", \"location\":\"{location}\", \"timeStamp\": \"{DateTime.Now}\", \"state\": \"{state}\" }}";
+        }
+
+        public void SaveAttribute(string key, string field, string value)
+        {
+            
         }
     }
 }

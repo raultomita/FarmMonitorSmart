@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,18 @@ namespace CloudApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Sync([FromBody] SyncRequest request)
+        public IActionResult Default([FromBody] DevicesRequest request)
+        {
+            if(request?.Inputs?.FirstOrDefault()?.Intent == "action.devices.SYNC")
+            {
+                return Sync(request);
+            }
+
+            return Query(request);
+        }
+
+        [HttpPost]
+        public IActionResult Sync([FromBody] DevicesRequest request)
         {
             var devices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
                 .ToList()
@@ -40,18 +52,28 @@ namespace CloudApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Query([FromBody] QueryRequest request)
+        public IActionResult Query([FromBody] DevicesRequest request)
         {
-            var requestedDevices = request?.Inputs?.SelectMany(i => i.Payload?.Devices?.Select(d => d.Id))
+            var requestedDevices = request?.Inputs?.SelectMany(i => i.Payload?.Devices?.Select(d => d.Id))?
                 .ToList();
 
-            var foundDevices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)               
+            Dictionary<string, object> foundDevices;
+
+            if (requestedDevices != null)
+            {
+
+                foundDevices = container.GetItemLinqQueryable<Device>(allowSynchronousQueryExecution: true)
                 .Where(d => requestedDevices.Contains(d.id))
-                .ToDictionary(d => d.id, d => (object) new
+                .ToDictionary(d => d.id, d => (object)new
                 {
                     On = d.State == "1" ? true : false,
                     Online = true
                 });
+            }
+            else
+            {
+                foundDevices = new Dictionary<string, object>();
+            }
 
             var response = new QueryResponse
             {
@@ -64,6 +86,8 @@ namespace CloudApi.Controllers
 
             return Ok(response);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> ReportState([FromBody] Device[] devices)

@@ -12,7 +12,7 @@ namespace LocalApp.Controllers
     {
         private static readonly List<string> supportedTypes = new List<string> { "switch", "toggleButton", "tankLevel", "watering", "led", "automaticTrigger", "distanceSensor" };
         private static readonly List<string> supportedLocations = new List<string> { "Bedroom", "Bathroom", "Living-room", "Kitchen", "Garden", "Lobby" };
-        
+
         private readonly IExternalWorld externalWorld;
 
         public AdminController(IExternalWorld externalWorld)
@@ -68,7 +68,7 @@ namespace LocalApp.Controllers
                             devices.Add(key, new DeviceDetails(key));
                         }
 
-                        devices[key].Fields = externalWorld.GetHashFields(key);
+                        devices[key].Fields = externalWorld.GetHashFields(key);                      
                         break;
                     default:
                         devicesOverview.Messages.Add($"I don't know what to do with this type: {type.ToString()}.");
@@ -87,7 +87,7 @@ namespace LocalApp.Controllers
                 if (device.Value.Fields == null)
                 {
                     device.Value.Messages.Add("This has no fields.");
-                    device.Value.Fields = new(string fieldName, string value)[0];
+                    device.Value.Fields = new KeyValuePair<string, string>[0];
                     hasValidationErrors = true;
                 }
 
@@ -108,34 +108,34 @@ namespace LocalApp.Controllers
                     foreach (var field in device.Fields)
                     {
                         int gpio;
-                        if (field.fieldName.ToLower().Contains("gpio"))
+                        if (field.Key.ToLower().Contains("gpio"))
                         {
-                            if (Int32.TryParse(field.value, out gpio))
+                            if (Int32.TryParse(field.Value, out gpio))
                             {
                                 if (gpios.Contains(gpio))
                                 {
-                                    device.Messages.Add($"GPIO {field.value} int field {field.fieldName} is duplicated.");
+                                    device.Messages.Add($"GPIO {field.Value} int field {field.Key} is duplicated.");
                                     hasValidationErrors = true;
                                 }
                                 gpios.Add(gpio);
                             }
                             else
                             {
-                                device.Messages.Add($"GPIO {field.value} from field {field.fieldName} cannot be converted in int.");
+                                device.Messages.Add($"GPIO {field.Value} from field {field.Key} cannot be converted in int.");
                                 hasValidationErrors = true;
 
                             }
                         }
 
-                        if (String.Compare(field.fieldName, "type", true) == 0 && !supportedTypes.Contains(field.value))
+                        if (String.Compare(field.Key, "type", true) == 0 && !supportedTypes.Contains(field.Value))
                         {
-                            device.Messages.Add($"type {field.value} is not supported.");
+                            device.Messages.Add($"type {field.Value} is not supported.");
                             hasValidationErrors = true;
                         }
 
-                        if (String.Compare(field.fieldName, "location", true) == 0 && !supportedLocations.Contains(field.value))
+                        if (String.Compare(field.Key, "location", true) == 0 && !supportedLocations.Contains(field.Value))
                         {
-                            device.Messages.Add($"location {field.value} is not supported.");
+                            device.Messages.Add($"location {field.Value} is not supported.");
                             hasValidationErrors = true;
                         }
                     }

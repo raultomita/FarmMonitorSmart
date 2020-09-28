@@ -19,11 +19,10 @@ namespace LocalApp.Hubs
         {
             var deviceStates = externalWorld.GetHashFields("heartbeat").Select(h => new
             {
-                name = h.fieldName.Substring(0, 1).ToUpper(),
-                latestDate = h.value,
-                isDead = (DateTime.Now - DateTime.ParseExact(h.value, "dd.MM.yy HH:mm:ss", CultureInfo.InvariantCulture)).Minutes > 10
+                name = h.Key.Substring(0, 1).ToUpper(),
+                latestDate = h.Value,
+                isDead = (DateTime.Now - DateTime.ParseExact(h.Value, "dd.MM.yy HH:mm:ss", CultureInfo.InvariantCulture)).Minutes > 10
             }).ToList();
-
 
             await Clients.Caller.SendAsync("heartbeats", new
             {
